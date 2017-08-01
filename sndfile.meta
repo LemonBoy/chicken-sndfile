@@ -1,0 +1,6 @@
+((synopsis        "Bindings to libsndfile")
+ (files           "sndfile.scm" "sndfile.meta" "sndfile.setup")
+ (author          "LemonBoy")
+ (license         "GPL-3")
+ (category        sound)
+ (foreign-depends "sndfile"))

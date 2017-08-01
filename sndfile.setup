@@ -1,0 +1,10 @@
+(unless (find-header "sndfile.h")
+  (error "Could not find the sndfile library"))
+
+(compile -s -j sndfile -O3 -d0 "sndfile.scm")
+(compile -s "sndfile.import.scm")
+
+(install-extension
+  'sndfile
+  '("sndfile.so" "sndfile.import.so")
+  '((version "0.1")))
