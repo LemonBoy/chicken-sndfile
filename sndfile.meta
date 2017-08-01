@@ -3,4 +3,5 @@
  (author          "LemonBoy")
  (license         "GPL-3")
  (category        sound)
+ (depends         foreigners)
  (foreign-depends "sndfile"))
