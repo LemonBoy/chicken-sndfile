@@ -1,7 +1,7 @@
 (unless (find-header "sndfile.h")
   (error "Could not find the sndfile library"))
 
-(compile -s -j sndfile -O3 -d0 "sndfile.scm")
+(compile -s -j sndfile -O3 -d0 "sndfile.scm" -lsndfile)
 (compile -s "sndfile.import.scm")
 
 (install-extension

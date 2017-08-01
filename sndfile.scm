@@ -104,6 +104,8 @@
   (foreign-lambda int sf_error c-pointer))
 (define c-sf-strerror
   (foreign-lambda c-string sf_strerror c-pointer))
+(define c-sf-error
+  (foreign-lambda int sf_error c-pointer))
 
 (define c-sf-read-short
   (foreign-lambda integer64 sf_read_short c-pointer s16vector integer64))
@@ -178,13 +180,16 @@
       (let ((name (strip-syntax (cadr x)))
 	    (cfun (strip-syntax (caddr x)))
 	    (vfun (strip-syntax (cadddr x))))
-	`(begin
-	   (define ,name
-	     (lambda (file buf #!optional n)
-	       (let ((buf-len (,vfun buf)))
-		 (when (and n (fx< buf-len n))
-		   (error "buffer is too small"))
-		 (,cfun file buf (or n buf-len))))))))))
+	`(define ,name
+	   (lambda (file buf #!optional n)
+	     (let ((buf-len (,vfun buf)))
+	       (when (and n (fx< buf-len n))
+		 (error "buffer is too small"))
+	       (let ((read (,cfun file buf (or n buf-len))))
+		 ; throw an error if something went wrong
+		 (when (and (fx= read 0) (fx> (c-sf-error file) 0))
+		   (error (c-sf-strerror file)))
+		 read))))))))
 
 (define-rw-function read-items!/s8  c-sf-read-char   s8vector-length)
 (define-rw-function read-items!/u8  c-sf-read-byte   u8vector-length)
