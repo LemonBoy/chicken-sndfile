@@ -146,6 +146,7 @@
 
 (define (with-sound-from-file file thunk)
   (##sys#check-string file 'with-sound-from-file)
+  (##sys#check-closure thunk 'with-sound-from-file)
   (let* ((info (%make-sf-info))
 	 (handle (c-sf-open file sfm-read info)))
     (unless handle
@@ -163,10 +164,12 @@
   (##sys#check-list format 'with-sound-to-file)
   (##sys#check-exact samplerate 'with-sound-to-file)
   (##sys#check-exact channels 'with-sound-to-file)
+  (##sys#check-closure thunk 'with-sound-to-file)
   (let* ((info (%make-sf-info))
-	 (_ (set-sf-info-format! info (triple->format format)))
-	 (_ (set-sf-info-samplerate! info samplerate))
-	 (_ (set-sf-info-channels! info channels))
+	 (_ (begin
+	      (set-sf-info-format! info (triple->format format))
+	      (set-sf-info-samplerate! info samplerate)
+	      (set-sf-info-channels! info channels)))
 	 (handle (c-sf-open file sfm-write info)))
     (unless handle
       (error "could not open the file" file (c-sf-strerror #f)))
