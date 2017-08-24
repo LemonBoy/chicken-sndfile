@@ -7,4 +7,4 @@
 (install-extension
   'sndfile
   '("sndfile.so" "sndfile.import.so")
-  '((version "0.1")))
+  '((version "0.0.2")))
